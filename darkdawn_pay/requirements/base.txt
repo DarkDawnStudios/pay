@@ -1,0 +1,4 @@
+django==4.1.*
+python-dotenv
+uvicorn[standard]
+requests
