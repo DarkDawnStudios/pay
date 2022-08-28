@@ -1,19 +1,22 @@
 from decimal import ROUND_DOWN, Decimal, getcontext
 
 import requests
-
 from utils.exceptions import UtilsException
 
 
-class CurrencyNotSupported(UtilsException):
+class CurrencyException(UtilsException):
     ...
 
 
-class InvalidCurrencyPriceReturned(UtilsException):
+class CurrencyNotSupported(CurrencyException):
     ...
 
 
-class PriceReturnedIsNaN(UtilsException):
+class InvalidPriceReturned(CurrencyException):
+    ...
+
+
+class PriceReturnedIsNaN(CurrencyException):
     ...
 
 
@@ -35,7 +38,7 @@ def to_usd(amount: str, currency: str):
     api_base_url = f"https://api.coingecko.com/api/v3/simple/price?ids={parsed_currency}&vs_currencies=usd"
     raw_price = requests.get(api_base_url).json().get(parsed_currency, {}).get("usd")
     if not raw_price:
-        raise InvalidCurrencyPriceReturned
+        raise InvalidPriceReturned
     try:
         price = Decimal(str(raw_price))
     except BaseException:
